@@ -1,0 +1,8 @@
+@import './_config.scss';
+
+@import './base/_index.scss';
+@import './utils/_index.scss';
+
+body {
+  @include text-props(20, 30);
+}

@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+
+    &::before,
+    &::after {
+        box-sizing: border-box;
+    }
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    position: relative;
+
+    height: 100%;
+
+    color: $color-text;
+    background: $backgroundcolor-default;
+
+    -webkit-text-size-adjust: 100%;
+}
+
