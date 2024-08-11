@@ -15,3 +15,4 @@ class TableEntry(models.Model):
     class Meta:
         verbose_name = 'таблица'
         verbose_name_plural = 'таблицы'
+        ordering = ['-date']
