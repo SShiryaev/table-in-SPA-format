@@ -146,9 +146,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Настройка переопределения модели пользователя
 AUTH_USER_MODEL = 'users.User'
 
-CORS_ALLOWED_ORIGINS = [
-    "https://read-only.example.com",
-    "https://read-and-write.example.com",
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
