@@ -189,8 +189,8 @@ input,
 select,
 textarea {
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 
@@ -199,8 +199,8 @@ textarea {
   outline: 0 none;
 
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 button,
@@ -241,14 +241,14 @@ button {
 
 input[type='checkbox'] {
   -webkit-appearance: checkbox;
-     -moz-appearance: checkbox;
-          appearance: checkbox;
+  -moz-appearance: checkbox;
+  appearance: checkbox;
 }
 
 input[type='radio'] {
   -webkit-appearance: radio;
-     -moz-appearance: radio;
-          appearance: radio;
+  -moz-appearance: radio;
+  appearance: radio;
 }
 
 ::-webkit-input-placeholder {

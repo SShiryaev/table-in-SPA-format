@@ -1,11 +1,12 @@
 <script setup>
-import Table from '@/components/Table.vue';
+import TableApp from '@/components/pages/TableApp.vue';
+
 
 </script>
 
 <template>
   <div class="app">
-    <Table class="app__table" />
+    <TableApp />
   </div>
 
 </template>
@@ -15,6 +16,7 @@ import Table from '@/components/Table.vue';
     display: flex;
     justify-content: center;
 
+    width: 100%;
     margin: rem(40) 0;
   }
 </style>
