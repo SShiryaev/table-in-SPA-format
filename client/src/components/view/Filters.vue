@@ -24,6 +24,10 @@
     return !value
   }));
 
+  const isDisabledSubmitButton = computed(() => Object.values(filtersValues.value).some((value) => {
+    return !value
+  }));
+
   const types = [{
     label: 'Дата',
     value: 'date',
@@ -53,17 +57,7 @@
   },];
 
   const onSubmit = async () => {
-    const queryParams = {
-      filter_field: filtersValues.value.type.value,
-      filter_condition: filtersValues.value.rule.value,
-      filter_value: filtersValues.value.value,
-    }
-
-    const response = await axios.get('http://127.0.0.1:8000/table', {
-      params: queryParams,
-    })
-
-    emit('update:filters', response.data);
+    emit('update:filters', filtersValues.value);
   };
 
   const onClear = () => {
@@ -80,25 +74,13 @@
     </h2>
 
     <div class="filters__fields">
-      <label class="filters__fields-item" for="value-field">
-        Правило сортировки
-
-        <input
-          id="value-field"
-          class="filters__fields-item-filed"
-          v-model="filtersValues.value"
-          placeholder="Значение фильтра"
-        />
-      </label>
-
       <label class="filters__fields-item" for="type-field">
-        Правило сортировки
+        Выбор колонки для фильтрации
 
         <select
           id="type-field"
           class="filters__fields-item-filed"
           v-model="filtersValues.type"
-          placeholder="Тип фильтра"
         >
           <option disabled value="" selected>Выберите один из вариантов</option>
           <option
@@ -112,7 +94,7 @@
       </label>
 
       <label class="filters__fields-item" for="rule-field">
-        Правило сортировки
+        Выбор условия фильтрации
 
         <select
           id="rule-field"
@@ -129,10 +111,24 @@
           </option>
         </select>
       </label>
+
+      <label class="filters__fields-item" for="value-field">
+        Поле для ввода значения для фильтрации
+
+        <input
+          id="value-field"
+          class="filters__fields-item-filed"
+          v-model="filtersValues.value"
+          placeholder="Значение фильтра"
+        />
+      </label>
     </div>
 
     <div class="filters__actions">
-      <button @click="onSubmit">
+      <button
+        :disabled="isDisabledSubmitButton"
+        @click="onSubmit"
+      >
         Применить
       </button>
 

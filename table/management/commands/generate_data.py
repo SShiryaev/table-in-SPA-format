@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Generate random table data'
 
     def handle(self, *args, **kwargs):
-        for obj in range(100):
+        for obj in range(1000):
             TableEntry.objects.create(
                 date=datetime.now() - timedelta(days=random.randint(0, 100)),
                 name=f'Object with name: {random.randint(1, 100)}',

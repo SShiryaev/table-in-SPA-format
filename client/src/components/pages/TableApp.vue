@@ -1,8 +1,11 @@
 <script setup>
+  import {inject, onMounted, ref} from 'vue';
   import Container from '@/components/containers/Container.vue';
   import Table from '@/components/view/Table.vue';
   import Filters from '@/components/view/Filters.vue';
-  import {inject, onMounted, ref} from "vue";
+  import Loader from '@/components/UI/Loader.vue';
+  import NotFound from '@/components/view/NotFound.vue';
+  import Pagination from '@/components/view/Pagination.vue';
 
   defineOptions({
     name: 'TableApp',
@@ -10,23 +13,84 @@
 
   const axios = inject('axios');
 
-  const tableData = ref(null);
+  const initialValue = {
+    page: 1,
+  };
 
-  const getInititalTableData = async () => {
-    const response = await axios.get('http://127.0.0.1:8000/table')
-    tableData.value = response.data;
-  }
+  const isLoading = ref(false);
+  const getTableParams = ref(structuredClone(initialValue));
+  const tableData = ref(null);
+  const paginationRef = ref(null);
+
+  const getTableData = async () => {
+    isLoading.value = true;
+
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/table', {
+        params: getTableParams.value,
+      })
+
+      setTimeout(() => {
+        tableData.value = response.data;
+      }, 500);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 500);
+    }
+  };
 
   onMounted( async () => {
-    await getInititalTableData();
+    await getTableData();
   });
 
-  const updateFilters = (data) => {
-    tableData.value = data;
-  }
+  const updateFilters = async (filtersValues) => {
+    const queryParams = {
+      filter_field: filtersValues.type?.value,
+      filter_condition: filtersValues.rule?.value,
+      filter_value: filtersValues.value,
+    };
+
+    getTableParams.value = {
+      ...getTableParams.value,
+      ...queryParams,
+      page: 1,
+    };
+
+    paginationRef.value.resetPage();
+
+    await getTableData();
+  };
 
   const clearFilters = async () => {
-    await getInititalTableData();
+    getTableParams.value = {
+      ordering: getTableParams.value.ordering,
+      page: 1,
+    };
+
+    paginationRef.value.resetPage();
+
+    await getTableData();
+  };
+
+  const onUpdateSort = async (sortValue) => {
+    getTableParams.value = {
+      ...getTableParams.value,
+      ordering: sortValue,
+      page: 1,
+    };
+
+    paginationRef.value.resetPage();
+
+    await getTableData();
+  };
+
+  const onUpdatePagination = async (currentPage) => {
+    getTableParams.value.page = currentPage;
+
+    await getTableData();
   }
 </script>
 
@@ -42,7 +106,23 @@
           @clear:filters="clearFilters"
         />
 
-        <Table v-if="tableData?.results?.length" class="table-app__table" :data="tableData?.results" />
+        <Loader v-show="isLoading" />
+
+        <NotFound v-show="!isLoading && !tableData?.results?.length" />
+
+        <Table
+          v-show="!isLoading && tableData?.results?.length"
+          class="table-app__table"
+          :data="tableData?.results"
+          @update:sort="onUpdateSort"
+        />
+
+        <Pagination
+          v-show="!isLoading && tableData?.results?.length"
+          ref="paginationRef"
+          :table-data="tableData"
+          @update:pagination="onUpdatePagination"
+        />
       </div>
     </Container>
   </div>
@@ -73,6 +153,10 @@
 
     &__table {
       width: 100%;
+
+      &:not(:last-child) {
+        margin-bottom: rem(20);
+      }
     }
   }
 </style>
