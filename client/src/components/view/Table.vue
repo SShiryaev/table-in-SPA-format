@@ -1,21 +1,15 @@
 <script setup>
-  import {onMounted, inject, ref} from 'vue';
-
   defineOptions({
     name: 'Table',
   });
 
-  const tableData = ref(null);
-
-  onMounted( async () => {
-    const axios = inject('axios');
-    const response = await axios.get('http://127.0.0.1:8000/table')
-    tableData.value = response.data;
-  });
+  defineProps({
+    data: Object,
+  })
 </script>
 
 <template>
-  <table v-if="tableData" class="table">
+  <table class="table">
     <thead class="table__head">
       <tr class="table__head-row">
         <th class="table__head-row-item">Дата</th>
@@ -27,9 +21,9 @@
 
     <tbody class="table__body">
       <tr
-          v-for="tableItem in tableData.results"
-          :key="tableItem.id"
-          class="table__body-row"
+        v-for="tableItem in data"
+        :key="tableItem.id"
+        class="table__body-row"
       >
         <td class="table__body-row-item">{{ tableItem.date }}</td>
         <td class="table__body-row-item">{{ tableItem.name }}</td>

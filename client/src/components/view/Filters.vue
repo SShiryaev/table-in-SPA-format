@@ -1,12 +1,19 @@
 <script setup>
-  import {computed, ref} from 'vue';
+  import {computed, inject, ref} from 'vue';
 
   defineOptions({
     name: 'Filters',
   });
 
+  const emit = defineEmits([
+    'update:filters',
+    'clear:filters',
+  ])
+
+  const axios = inject('axios');
+
   const filtersInititalValue = {
-    name: null,
+    value: null,
     type: null,
     rule: null,
   };
@@ -29,28 +36,40 @@
   }, {
     label: 'Расстояние',
     value: 'distance',
-  }, ];
+  },];
 
   const rules = [{
     label: 'Равно',
-    value: 'equals',
+    value: 'exact',
   }, {
     label: 'Содержит',
-    value: 'contains',
+    value: 'icontains',
   }, {
     label: 'Больше',
-    value: 'more',
+    value: 'gt',
   }, {
     label: 'Меньше',
-    value: 'less',
-  }, ];
+    value: 'lt',
+  },];
 
-  const onSubmit = () => {
-    console.log('onSubmit')
+  const onSubmit = async () => {
+    const queryParams = {
+      filter_field: filtersValues.value.type.value,
+      filter_condition: filtersValues.value.rule.value,
+      filter_value: filtersValues.value.value,
+    }
+
+    const response = await axios.get('http://127.0.0.1:8000/table', {
+      params: queryParams,
+    })
+
+    emit('update:filters', response.data);
   };
 
   const onClear = () => {
     filtersValues.value = structuredClone(filtersInititalValue);
+
+    emit('clear:filters');
   };
 </script>
 
@@ -67,7 +86,7 @@
         <input
           id="value-field"
           class="filters__fields-item-filed"
-          v-model="filtersValues.name"
+          v-model="filtersValues.value"
           placeholder="Значение фильтра"
         />
       </label>
@@ -137,7 +156,7 @@
 
     &__title {
       &:not(:last-child) {
-        margin-bottom: rem(16);
+        margin-bottom: rem(20);
       }
     }
 
@@ -148,7 +167,7 @@
       width: 100%;
 
       &:not(:last-child) {
-        margin-bottom: rem(16);
+        margin-bottom: rem(20);
       }
 
       &-item {
