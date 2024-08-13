@@ -2,11 +2,11 @@
 
 ### Для запуска проекта через Docker:
 
-- установить Docker [ссылке](https://docs.docker.com/engine/install/)
+- установить [Docker](https://docs.docker.com/engine/install/)
 - для сборки проекта и запуска введите команду:
 
 ```text
 docker-compose up -d --build
 ```
 
-- перейти по ссылке: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- перейти по [ссылке](http://localhost:5173/) с фронтовой частью приложения: http://localhost:5173/
