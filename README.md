@@ -24,7 +24,7 @@
 
 ```text
 docker-compose up -d --build
-cd path\to\project\client\
+cd \client\
 npm i
 npm run dev
 ```
